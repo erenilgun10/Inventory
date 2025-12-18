@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Inventory.BLL/Inventory.BLL.csproj" />
+  <Project Path="Inventory.DAL/Inventory.DAL.csproj" />
+  <Project Path="Inventory.UI/Inventory.UI.csproj" Id="0d62ec4a-3af2-46cd-be8d-b83062d6cfbe" />
+</Solution>
