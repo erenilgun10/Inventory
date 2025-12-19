@@ -12,7 +12,7 @@ public class ProductRepository
     {
         using var con = new SqlConnection(Db.ConnectionString);
         using var da = new SqlDataAdapter(@"
-SELECT ProductId, Barcode, Name, Stock, MinStock, PurchasePrice, SalePrice, IsActive, CreatedAt
+SELECT ProductId, CategoryId, SupplierId, Barcode, Name,Stock, MinStock, PurchasePrice, SalePrice, IsActive, CreatedAt
 FROM Products
 ORDER BY ProductId DESC", con);
 
@@ -21,16 +21,24 @@ ORDER BY ProductId DESC", con);
         return dt;
     }
 
-    public int Insert(string? barcode, string name, int stock, int minStock)
+    public int Insert(string? barcode, string name, int? categoryId, int? supplierId, decimal purchasePrice,
+    decimal salePrice, int stock, int minStock)
     {
         using var con = new SqlConnection(Db.ConnectionString);
         using var cmd = new SqlCommand(@"
-INSERT INTO Products (Barcode, Name, CategoryId, SupplierId, PurchasePrice, SalePrice, Stock, MinStock, IsActive, CreatedAt)
-VALUES (@Barcode, @Name, NULL, NULL, 0, 0, @Stock, @MinStock, 1, GETDATE());
-SELECT SCOPE_IDENTITY();", con);
+        INSERT INTO Products
+        (Barcode, Name, CategoryId, SupplierId, PurchasePrice, SalePrice, Stock, MinStock, IsActive, CreatedAt)
+        VALUES
+        (@Barcode, @Name, @CategoryId, @SupplierId, @PurchasePrice, @SalePrice, @Stock, @MinStock, 1, GETDATE());
+        SELECT SCOPE_IDENTITY();
+    ", con);
 
         cmd.Parameters.AddWithValue("@Barcode", (object?)barcode ?? DBNull.Value);
         cmd.Parameters.AddWithValue("@Name", name);
+        cmd.Parameters.AddWithValue("@CategoryId", (object?)categoryId ?? DBNull.Value);
+        cmd.Parameters.AddWithValue("@SupplierId", (object?)supplierId ?? DBNull.Value);
+        cmd.Parameters.AddWithValue("@PurchasePrice", purchasePrice);
+        cmd.Parameters.AddWithValue("@SalePrice", salePrice);
         cmd.Parameters.AddWithValue("@Stock", stock);
         cmd.Parameters.AddWithValue("@MinStock", minStock);
 
@@ -38,23 +46,38 @@ SELECT SCOPE_IDENTITY();", con);
         return Convert.ToInt32(cmd.ExecuteScalar());
     }
 
-    public void Update(int productId, string? barcode, string name, int stock, int minStock)
+
+    public void Update(int productId, string? barcode, string name, int? categoryId, int? supplierId,
+        decimal purchasePrice, decimal salePrice, int stock, int minStock)
     {
         using var con = new SqlConnection(Db.ConnectionString);
         using var cmd = new SqlCommand(@"
-UPDATE Products
-SET Barcode=@Barcode, Name=@Name, Stock=@Stock, MinStock=@MinStock
-WHERE ProductId=@ProductId;", con);
+        UPDATE Products SET
+            Barcode = @Barcode,
+            Name = @Name,
+            CategoryId = @CategoryId,
+            SupplierId = @SupplierId,
+            PurchasePrice = @PurchasePrice,
+            SalePrice = @SalePrice,
+            Stock = @Stock,
+            MinStock = @MinStock
+        WHERE ProductId = @ProductId
+    ", con);
 
         cmd.Parameters.AddWithValue("@ProductId", productId);
         cmd.Parameters.AddWithValue("@Barcode", (object?)barcode ?? DBNull.Value);
         cmd.Parameters.AddWithValue("@Name", name);
+        cmd.Parameters.AddWithValue("@CategoryId", (object?)categoryId ?? DBNull.Value);
+        cmd.Parameters.AddWithValue("@SupplierId", (object?)supplierId ?? DBNull.Value);
+        cmd.Parameters.AddWithValue("@PurchasePrice", purchasePrice);
+        cmd.Parameters.AddWithValue("@SalePrice", salePrice);
         cmd.Parameters.AddWithValue("@Stock", stock);
         cmd.Parameters.AddWithValue("@MinStock", minStock);
 
         con.Open();
         cmd.ExecuteNonQuery();
     }
+
 
     public void Delete(int productId)
     {

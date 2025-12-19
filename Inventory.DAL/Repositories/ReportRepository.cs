@@ -69,4 +69,24 @@ public class ReportRepository
         }
         return list;
     }
+    public List<DailyPurchaseSummaryVm> GetDailyPurchases()
+    {
+        var list = new List<DailyPurchaseSummaryVm>();
+        using var con = new SqlConnection(Db.ConnectionString);
+        using var cmd = new SqlCommand("SELECT * FROM vw_DailyPurchaseSummary ORDER BY PurchaseDate DESC", con);
+        con.Open();
+
+        using var r = cmd.ExecuteReader();
+        while (r.Read())
+        {
+            list.Add(new DailyPurchaseSummaryVm
+            {
+                PurchaseDate = (DateTime)r["PurchaseDate"],
+                TotalQuantity = (int)r["TotalQuantity"],
+                TotalCost = (decimal)r["TotalCost"]
+            });
+        }
+        return list;
+    }
+
 }
