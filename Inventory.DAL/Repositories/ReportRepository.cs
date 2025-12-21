@@ -33,7 +33,7 @@ public class ReportRepository
     {
         var list = new List<DailySalesSummaryVm>();
         using var con = new SqlConnection(Db.ConnectionString);
-        using var cmd = new SqlCommand("SELECT * FROM vw_DailySalesSummary ORDER BY SalesDate DESC", con);
+        using var cmd = new SqlCommand("SELECT * FROM vw_DailySalesSummary ORDER BY SalesDate ", con);
         con.Open();
 
         using var r = cmd.ExecuteReader();
@@ -53,7 +53,7 @@ public class ReportRepository
     {
         var list = new List<ProductSalesSummaryVm>();
         using var con = new SqlConnection(Db.ConnectionString);
-        using var cmd = new SqlCommand("SELECT * FROM vw_ProductSalesSummary ORDER BY Revenue DESC", con);
+        using var cmd = new SqlCommand("SELECT * FROM vw_ProductSalesSummary ORDER BY Revenue ", con);
         con.Open();
 
         using var r = cmd.ExecuteReader();
@@ -73,7 +73,7 @@ public class ReportRepository
     {
         var list = new List<DailyPurchaseSummaryVm>();
         using var con = new SqlConnection(Db.ConnectionString);
-        using var cmd = new SqlCommand("SELECT * FROM vw_DailyPurchaseSummary ORDER BY PurchaseDate DESC", con);
+        using var cmd = new SqlCommand("SELECT * FROM vw_DailyPurchaseSummary ORDER BY PurchaseDate ", con);
         con.Open();
 
         using var r = cmd.ExecuteReader();

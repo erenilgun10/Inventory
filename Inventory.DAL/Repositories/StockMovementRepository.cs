@@ -12,7 +12,7 @@ namespace Inventory.DAL.Repositories
             using var da = new SqlDataAdapter(@"
 SELECT MovementId, ProductId, MovementType, Quantity, UnitPrice, Note, MovementDate
 FROM StockMovements
-ORDER BY MovementDate DESC, MovementId DESC;", con);
+ORDER BY MovementDate , MovementId ;", con);
 
             var dt = new DataTable();
             da.Fill(dt);

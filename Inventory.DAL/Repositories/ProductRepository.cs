@@ -14,7 +14,7 @@ public class ProductRepository
         using var da = new SqlDataAdapter(@"
 SELECT ProductId, CategoryId, SupplierId, Barcode, Name,Stock, MinStock, PurchasePrice, SalePrice, IsActive, CreatedAt
 FROM Products
-ORDER BY ProductId DESC", con);
+ORDER BY ProductId ", con);
 
         var dt = new DataTable();
         da.Fill(dt);

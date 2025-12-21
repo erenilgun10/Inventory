@@ -12,7 +12,7 @@ namespace Inventory.DAL.Repositories
             using var da = new SqlDataAdapter(@"
 SELECT SupplierId, Name, Phone, Email, Address
 FROM Suppliers
-ORDER BY SupplierId DESC;", con);
+ORDER BY SupplierId ", con);
 
             var dt = new DataTable();
             da.Fill(dt);

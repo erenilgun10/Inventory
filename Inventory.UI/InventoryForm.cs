@@ -32,7 +32,6 @@ namespace Inventory.UI
         public InventoryForm()
         {
             InitializeComponent();
-            this.Load += InventoryForm_Load;
 
             btnProductAdd.Click += btnProductAdd_Click;
             btnProductUpdate.Click += btnProductUpdate_Click;
@@ -56,7 +55,8 @@ namespace Inventory.UI
             btnMovAdd.Click += btnMovAdd_Click;
             btnMovDelete.Click += btnMovDelete_Click;
             dgvStockMovementList.SelectionChanged += dgvStockMovementList_SelectionChanged;
-
+            cmbMovProduct.SelectedIndexChanged += (_, __) => UpdateMovAddButtonState();
+            nudMovQty.ValueChanged += (_, __) => UpdateMovAddButtonState();
 
         }
 
@@ -105,24 +105,24 @@ namespace Inventory.UI
                     dgvProductList.Visible = true;
 
                     EnsureProductLookupsLoaded();
-                    LoadProducts();
                     ClearProductForm();
+                    LoadProducts();
                     break;
 
                 case ScreenMode.Categories:
                     crudPanel.Visible = true;
                     grpCategoryDetails.Visible = true;
                     dgvCategoryList.Visible = true;
-                    LoadCategories();
                     ClearCategoryForm();
+                    LoadCategories();
                     break;
 
                 case ScreenMode.Suppliers:
                     crudPanel.Visible = true;
                     grpSupplierDetails.Visible = true;
                     dgvSupplierList.Visible = true;
-                    LoadSuppliers();
                     ClearSupplierForm();
+                    LoadSuppliers();
                     break;
 
                 case ScreenMode.StockMovements:
@@ -132,8 +132,8 @@ namespace Inventory.UI
                     dgvStockMovementList.Visible = true;
 
                     EnsureMovementProductsLoaded();
-                    LoadStockMovements();
                     ClearStockMovementForm();
+                    LoadStockMovements();
                     break;
             }
         }
@@ -664,9 +664,6 @@ namespace Inventory.UI
         private void UpdateSupplierAddButtonState()
         {
             btnSupplierAdd.Enabled = !string.IsNullOrWhiteSpace(txtSupplierName.Text);
-            UpdateProductAddButtonState();
-            UpdateCategoryAddButtonState();
-            UpdateSupplierAddButtonState();
         }
 
 
@@ -715,6 +712,7 @@ namespace Inventory.UI
             txtMovNote.Clear();
             dtpMovDate.Value = DateTime.Today; 
             dgvStockMovementList.ClearSelection();
+            UpdateMovAddButtonState();
 
         }
 
@@ -751,7 +749,10 @@ namespace Inventory.UI
 
             _selectedMovementId = Convert.ToInt32(row["MovementId"]);
         }
-
+        private void UpdateMovAddButtonState()
+        {
+            btnMovAdd.Enabled = cmbMovProduct.SelectedValue != null && nudMovQty.Value > 0;
+        }
 
         #endregion
 

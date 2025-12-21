@@ -12,7 +12,7 @@ namespace Inventory.DAL.Repositories
             using var da = new SqlDataAdapter(@"
 SELECT CategoryId, Name
 FROM Categories
-ORDER BY CategoryId DESC;", con);
+ORDER BY CategoryId;", con);
 
             var dt = new DataTable();
             da.Fill(dt);
